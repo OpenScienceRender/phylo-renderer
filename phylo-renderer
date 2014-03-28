@@ -1,0 +1,34 @@
+require 'open-uri'
+
+newick = ""
+
+open(ARGV[0]) do |u|
+  u.each do |l|
+    newick += l
+  end
+end
+
+newick.chomp!
+
+puts <<EOHTML
+<html>
+<head>
+  <script type="text/javascript" src="/phylo-renderer/js/raphael-min.js" ></script>
+  <script type="text/javascript" src="/phylo-renderer/js/jsphylosvg-min.js"></script>
+
+  <script type="text/javascript">
+  window.onload = function(){
+      var dataObject = { newick: '#{newick.to_s};' };
+      phylocanvas = new Smits.PhyloCanvas(
+        dataObject,
+        'svgCanvas',
+        500, 500
+      );
+  };
+  </script>
+</head>
+<body>
+  <div id="svgCanvas"> </div>
+</body>
+</html>
+EOHTML
